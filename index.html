@@ -4,8 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Periodic Table</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <h1>Interactive Periodic Table</h1>
+        <div class="controls">
+            <input type="text" id="search" placeholder="Search element...">
+
+            <div class="filter-section">
+                <label>Filter by Category:</label>
+                <button class="filter-btn" data-category="all">All</button>
+                <button class="filter-btn" data-category="Metal">Metals</button>
+                <button class="filter-btn" data-category="Nonmetal">Non-Metals</button>
+                <button class="filter-btn" data-category="Noble Gas">Noble Gases</button>
+            </div>
+
+            <div class="view-toggle">
+                <label>View Mode:</label>
+                <select id="view-mode">
+                    <option value = "default">Default</option>
+                    <option value = "state">State at Room Temperature</option>
+                    <option value = "discovery">Discovery Year</option>
+                </select>
+            </div>
+        </div>
+        <div id = "periodic-table" class ="periodic-table">
+
+        </div>
+        <div id="element-details" class="element-details">
+            <h2 class="details-name">Element Details</h2>
+            <p class="details-info">Click to see more informations</p>
+        </div>
+    </div>
     
+    <script src="elements-data.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
