@@ -1,45 +1,36 @@
-const elementsData = [
-    {
-        name: "Hydrogen",
-        symbol: "H",
-        atomicNumber:1,
-        category: "Nonmetal",
-        state: "Gas",
-        discoveryYear: "1766",
-        uses: "Fuel cells, fertilizers, rocket fuel",
-        weight: 1.008,
-        period: 1,
-        group: 1
-    },
-    {
-        name: "Helium",
-        symbol: "He",
-        atomicNumber: 2,
-        category: "Noble Gas",
-        state: "Gas",
-        discoveryYear: 1895,
-        uses: "Balloons, cooling systems, MRI machines",
-        weight: 4.003,
-        period: 1,
-        group: 18
+
+
+let elementsData = [];
+
+async function loadElementsData() {
+    try {
+        const response = await fetch('elements-data.json'); // Fetch the JSON file
+        if (!response.ok) {
+            throw new Error(`Failed to load elements data: ${response.statusText}`);
+        }
+        elementsData = await response.json(); // Parse the JSON
+        console.log(elementsData)
+        initPage(); // Initialize the page after loading data
+    } catch (error) {
+        console.error('Error loading elements data:', error);
     }
-];
+}
+
 
 function createPeriodicTable(){
     const table = document.getElementById('periodic-table');
     table.innerHTML = ''; // Clear existing content
-    elementsData.forEach(element =>{
-        const elementDiv = document.createElement('div');
-        elementDiv.classList.add('element',  element.category.toLowerCase().replace(' ', '-'));
-        elementDiv.setAttribute('data-atomic-number', element.atomicNumber);
-        elementDiv.setAttribute('data-category', element.category);
-        elementDiv.innerHTML = `
-        <span class="symbol">${element.symbol}</span>
-        <span class="atomic-number">${element.atomicNumber}</span>
-        
-    `;
 
-   
+    elementsData.forEach(element => {
+        const elementDiv = document.createElement('div');
+        elementDiv.classList.add('element', element.groupBlock.toLowerCase().replaceAll(' ', '-'));
+        elementDiv.setAttribute('data-atomic-number', element.atomicNumber);
+        elementDiv.setAttribute('data-group-block', element.groupBlock);
+        elementDiv.innerHTML = `
+            <span class="symbol">${element.symbol}</span>
+            <span class="atomic-number">${element.atomicNumber}</span>
+        `;
+
         // Add click event to show details
         elementDiv.addEventListener('click', () => showElementDetails(element));
 
@@ -62,51 +53,25 @@ function showElementDetails(element) {
     
     // Create a more comprehensive details view
     detailsContainer.innerHTML = `
-        <div class="element-details-header">
-            <h2>${element.name}</h2>
-            <span class="element-symbol">${element.symbol}</span>
+    <div class="element-details-header">
+        <h2>${element.name} (${element.symbol})</h2>
+    </div>
+    <div class="element-details-content">
+        <div class="detail-grid">
+            <div class="detail-item"><strong>Atomic Number:</strong> ${element.atomicNumber}</div>
+            <div class="detail-item"><strong>Atomic Mass:</strong> ${element.atomicMass}</div>
+            <div class="detail-item"><strong>Group Block:</strong> ${element.groupBlock}</div>
+            <div class="detail-item"><strong>Standard State:</strong> ${element.standardState}</div>
+            <div class="detail-item"><strong>Electronegativity:</strong> ${element.electronegativity || 'N/A'}</div>
+            <div class="detail-item"><strong>Electron Configuration:</strong> ${element.electronicConfiguration}</div>
+            <div class="detail-item"><strong>Melting Point:</strong> ${element.meltingPoint || 'N/A'} K</div>
+            <div class="detail-item"><strong>Boiling Point:</strong> ${element.boilingPoint || 'N/A'} K</div>
+            <div class="detail-item"><strong>Density:</strong> ${element.density || 'N/A'} g/cm³</div>
+            <div class="detail-item"><strong>Year Discovered:</strong> ${element.yearDiscovered}</div>
+            <div class="detail-item"><strong>Bonding Type:</strong> ${element.bondingType}</div>
         </div>
-        <div class="element-details-content">
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <strong>Atomic Number:</strong>
-                    <span>${element.atomicNumber}</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Category:</strong>
-                    <span>${element.category}</span>
-                </div>
-                <div class="detail-item">
-                    <strong>State at Room Temperature:</strong>
-                    <span>${element.state}</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Atomic Weight:</strong>
-                    <span>${element.weight}</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Discovery Year:</strong>
-                    <span>${element.discoveryYear}</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Period:</strong>
-                    <span>${element.period}</span>
-                </div>
-                <div class="detail-item">
-                    <strong>Group:</strong>
-                    <span>${element.group}</span>
-                </div>
-            </div>
-            <div class="element-description">
-                <h3>Description</h3>
-                <p>${element.description}</p>
-            </div>
-            <div class="element-uses">
-                <h3>Uses</h3>
-                <p>${element.uses}</p>
-            </div>
-        </div>
-    `;
+    </div>
+`;
 
     // Scroll to details section
     detailsContainer.scrollIntoView({ behavior: 'smooth' });
@@ -138,7 +103,8 @@ function setupSearch() {
                 elementData.name.toLowerCase().includes(query) ||
                 elementData.symbol.toLowerCase().includes(query);
             
-            element.style.display = matches ? 'flex' : 'none';
+            // element.style.display = matches ? 'flex' : 'none';
+            element.style.opacity = matches ? '1' : '0.3';
         });
     });
 }
@@ -148,42 +114,45 @@ function setupCategoryFilters() {
     const filterButtons = document.querySelectorAll('.filter-btn');
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+
             const category = button.dataset.category;
             const elements = document.querySelectorAll('.element');
             
             elements.forEach(element => {
-                if (category === 'all' || element.dataset.category === category) {
-                    element.style.display = 'flex';
+                if (category === 'all' || element.dataset.groupBlock.toLowerCase() === category.toLowerCase()) {
+                    element.style.opacity = 1;
                 } else {
-                    element.style.display = 'none';
+                    element.style.opacity = 0.3;
                 }
             });
         });
     });
+
+    // Set 'All' button as active by default
+    const allButton = document.querySelector('.filter-btn[data-category="all"]');
+    if (allButton) {
+        allButton.classList.add('active');
+    }
 }
 
 // View mode toggle
 function setupViewModeToggle() {
-    const viewModeSelect = document.getElementById('view-mode');
+    const table = document.getElementById('periodic-table');
+    const viewModeSelect = document.getElementById('view-mode'); // Add this element in HTML if needed.
+
     viewModeSelect.addEventListener('change', () => {
-        const mode = viewModeSelect.value;
-        const elements = document.querySelectorAll('.element');
-        
-        elements.forEach((element, index) => {
-            const elementData = elementsData[index];
-            
-            switch(mode) {
-                case 'default':
-                    element.textContent = elementData.symbol;
-                    break;
-                case 'state':
-                    element.textContent = elementData.state;
-                    break;
-                case 'discovery':
-                    element.textContent = elementData.discoveryYear;
-                    break;
-            }
-        });
+        if (viewModeSelect.value === 'grid') {
+            table.classList.remove('list-view');
+            table.classList.add('grid-view');
+        } else {
+            table.classList.remove('grid-view');
+            table.classList.add('list-view');
+        }
     });
 }
 
@@ -196,4 +165,4 @@ function initPage() {
 }
 
 // Run initialization when DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initPage);
+document.addEventListener('DOMContentLoaded', loadElementsData);

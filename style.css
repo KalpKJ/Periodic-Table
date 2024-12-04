@@ -67,7 +67,14 @@ h1{
     border-color: var(--accent-secondary);
     box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
 }
-
+.filter-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
 
 .filer-section, .view-toggle{
     display: flex;
@@ -78,15 +85,23 @@ h1{
 .filter-btn{
     background-color: var(--bg-tertiary);
     border: 1px solid var(--accent-primary);
-    padding: 8px 12px;
+    padding: 6px 10px;
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 4px;
     color: var(--text-primary);
     transition: all 0.3s ease;
+    font-size: 0.8em;
+    text-transform: capitalize;
+    min-width: 80px;
+    text-align: center;
 
 }
 .filter-btn:hover {
     background-color: var(--accent-primary);
+    color: var(--bg-primary);
+}
+.filter-btn.active {
+    background-color: var(--accent-secondary);
     color: var(--bg-primary);
 }
 .periodic-table{
@@ -211,13 +226,50 @@ h1{
     color: var(--accent-primary);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
     .periodic-table {
-        grid-template-columns: repeat(10, 1fr);
+        grid-template-columns: repeat(12, 1fr);
     }
     
     .controls {
         flex-direction: column;
+    }
+    .filter-section {
+        gap: 8px;
+    }
+    .filter-btn {
+        font-size: 0.7em;
+        padding: 4px 8px;
+        min-width: 70px;
+    }
+}
+@media (max-width: 768px) {
+    .periodic-table {
+        grid-template-columns: repeat(6, 1fr); /* Reduce to 6 columns */
+    }
+}
+
+@media (max-width: 480px) {
+    .periodic-table {
+        grid-template-columns: repeat(3, 1fr); /* Reduce to 3 columns for mobile */
+        gap: 6px; /* Reduce spacing */
+    }
+
+    .element {
+        padding: 10px; /* Adjust padding */
+        font-size: 1.5em; /* Adjust font size */
+    }
+    .atomic-number{
+        visibility: hidden;
+    }
+    .filter-section {
+        gap: 6px;
+    }
+
+    .filter-btn {
+        font-size: 0.6em;
+        padding: 3px 6px;
+        min-width: 60px;
     }
 }
 
