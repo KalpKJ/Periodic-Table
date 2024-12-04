@@ -20,7 +20,6 @@
     --gradient-nonmetal: linear-gradient(135deg, #27ae60, #2ecc71);
     --gradient-noble-gas: linear-gradient(135deg, #c0392b, #e74c3c);
 }
-
 body{
     font-family: Arial, Helvetica, sans-serif;
     background-color: var(--bg-primary);
@@ -89,13 +88,6 @@ h1{
 .filter-btn:hover {
     background-color: var(--accent-primary);
     color: var(--bg-primary);
-}
-#view-mode {
-    background-color: var(--bg-tertiary);
-    color: var(--text-primary);
-    border: 1px solid var(--accent-primary);
-    padding: 8px;
-    border-radius: 6px;
 }
 .periodic-table{
     display: grid;

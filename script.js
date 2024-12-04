@@ -27,7 +27,7 @@ const elementsData = [
 
 function createPeriodicTable(){
     const table = document.getElementById('periodic-table');
-
+    table.innerHTML = ''; // Clear existing content
     elementsData.forEach(element =>{
         const elementDiv = document.createElement('div');
         elementDiv.classList.add('element',  element.category.toLowerCase().replace(' ', '-'));
