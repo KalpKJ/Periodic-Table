@@ -9,6 +9,7 @@
 <body>
     <div class="container">
         <h1>Interactive Periodic Table</h1>
+        
         <div class="controls">
             <input type="text" id="search" placeholder="Search element...">
 
@@ -23,8 +24,8 @@
                 <button class="filter-btn" data-category="Metalloid">Metalloids</button>
                 <button class="filter-btn" data-category="Halogen">Halogens</button>
                 <button class="filter-btn" data-category="Transition Metal">Transition Metals</button>
-                <button class="filter-btn" data-category="Actinoid">Actinoids</button>
                 <button class="filter-btn" data-category="Lanthanoid">Lanthanoids</button>
+                <button class="filter-btn" data-category="Actinoid">Actinoids</button>
                 <button class="filter-btn" data-category="Post-transition metal">Post-transition Metals</button>
             </div>
         </div>
@@ -33,7 +34,39 @@
         </div>
         <div id="element-details" class="element-details">
             <h2 class="details-name">Element Details</h2>
-            <p class="details-info">Click to see more informations</p>
+            <p class="details-info">Click on any element to see more informations</p>
+        </div>
+
+
+        <button id="sidebar-toggle" class = "sidebar-toggle">⋮</button>
+        <div id="sidebar" class = "sidebar">
+            <div class="sidebar-section">
+                <h3>Display Options</h3>
+                <div id="display-mode-options">
+                    <div class="sidebar-option" data-action="toggle-atomic-number">Toggle Atomic Numbers</div>
+                    <div class="sidebar-option" data-action="toggle-element-names">Toggle Element Names</div>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <h3>Color Schemes</h3>
+                <div id="color-scheme-options">
+                    <div class="sidebar-option" data-action="color-scheme-default">Default Scheme</div>
+                    <div class="sidebar-option" data-action="color-scheme-high-contrast">High Contrast</div>
+                    <div class="sidebar-option" data-action="color-scheme-grayscale">Grayscale</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>View Modes</h3>
+                <div id="view-mode-options">
+                    <div class="sidebar-option" data-action="view-mode-full">Full Details</div>
+                    <div class="sidebar-option" data-action="view-mode-compact">Compact View</div>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <h3>Quiz</h3>
+                <div class="sidebar-option" onclick="window.location.href='quizPage.html'">Take Quiz</div>
+            </div>
         </div>
     </div>
     

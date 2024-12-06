@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periodic Table Quiz</title>
+    <link rel="stylesheet" href="quizStyle.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Periodic Table Quiz</h1>
+        <div id="quiz-container">
+            <div id="quiz-start">
+                <button id="start-quiz-btn" class="quiz-btn">Start Quiz</button>
+            </div>
+            <div id="quiz-questions" style="display: none;">
+                <div id="current-question"></div>
+                <div id="answer-options"></div>
+                <div class="quiz-navigation">
+                    <button id="next-question" class="quiz-btn">Next Question</button>
+                </div>
+            </div>
+            <div id="quiz-results" style="display: none;">
+                <h2>Quiz Results</h2>
+                <p id="score-display"></p>
+                <button id="restart-quiz" class="quiz-btn">Restart Quiz</button>
+            </div>
+        </div>
+        
+    </div>
+    <script src="quiz.js"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 
 
 let elementsData = [];
+let selectedElement = null;
 
 async function loadElementsData() {
     try {
@@ -9,7 +10,6 @@ async function loadElementsData() {
             throw new Error(`Failed to load elements data: ${response.statusText}`);
         }
         elementsData = await response.json(); // Parse the JSON
-        console.log(elementsData)
         initPage(); // Initialize the page after loading data
     } catch (error) {
         console.error('Error loading elements data:', error);
@@ -140,29 +140,98 @@ function setupCategoryFilters() {
     }
 }
 
-// View mode toggle
-function setupViewModeToggle() {
-    const table = document.getElementById('periodic-table');
-    const viewModeSelect = document.getElementById('view-mode'); // Add this element in HTML if needed.
-
-    viewModeSelect.addEventListener('change', () => {
-        if (viewModeSelect.value === 'grid') {
-            table.classList.remove('list-view');
-            table.classList.add('grid-view');
-        } else {
-            table.classList.remove('grid-view');
-            table.classList.add('list-view');
-        }
-    });
-}
 
 
 function initPage() {
     createPeriodicTable();
     setupSearch();
     setupCategoryFilters();
-    setupViewModeToggle();
 }
 
 // Run initialization when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', loadElementsData);
+
+const sidebarToggle = document.getElementById('sidebar-toggle');
+const sidebar = document.getElementById('sidebar');
+
+sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open'); // Toggle the 'open' class
+});
+
+document.querySelectorAll('.sidebar-option').forEach(option => {
+    option.addEventListener('click', handleSidebarOption);
+});
+
+function handleSidebarOption(event) {
+    const action = event.target.dataset.action;
+    switch (action) {
+        case 'toggle-atomic-number':
+            toggleAtomicNumbers();
+            break;
+        case 'toggle-element-names':
+            toggleElementNames();
+            break;
+        case 'color-scheme-default':
+        case 'color-scheme-high-contrast':
+        case 'color-scheme-grayscale':
+            changeColorScheme(action);
+            break;
+        case 'view-mode-full':
+        case 'view-mode-compact':
+            changeViewMode(action);
+            break;
+    }
+}
+
+function toggleAtomicNumbers() {
+    document.querySelectorAll('.atomic-number').forEach(el => {
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    });
+}
+
+function toggleElementNames() {
+    document.querySelectorAll('.element').forEach(el => {
+        const symbol = el.querySelector('.symbol');
+        
+        // Check if currently showing the name
+        if (symbol.dataset.displayMode !== 'name') {
+            // Store the original symbol
+            symbol.dataset.originalSymbol = symbol.textContent;
+
+            // Find the full name
+            const elementData = elementsData.find(e => e.symbol === symbol.dataset.originalSymbol);
+
+            if (elementData) {
+                // Switch to name
+                symbol.textContent = elementData.name;
+                symbol.dataset.displayMode = 'name';
+
+                // Adjust box size for names
+                el.style.width = '100px'; // Adjust width
+                el.style.height = '120px'; // Adjust height
+
+                // Adjust font for names
+                symbol.style.fontSize = '1em'; 
+            }
+        } else {
+            // Switch back to symbol
+            symbol.textContent = symbol.dataset.originalSymbol;
+            symbol.dataset.displayMode = 'symbol';
+
+            // Restore box size for symbols
+            el.style.width = '80px';
+            el.style.height = '100px';
+
+            // Restore font for symbols
+            symbol.style.fontSize = '1.2em';
+        }
+    });
+}
+function changeColorScheme(scheme) {
+    document.body.className = scheme;
+}
+
+function changeViewMode(mode) {
+    const table = document.getElementById('periodic-table');
+    table.className = mode;
+}
