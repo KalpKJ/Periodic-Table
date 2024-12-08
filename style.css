@@ -21,6 +21,21 @@
     --gradient-element: linear-gradient(145deg, #262640, #1a1a30);
     --gradient-hover: linear-gradient(145deg, #4b6cb7, #182848);
 }
+body.light-theme {
+    /* Light Theme */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f5;
+    --bg-tertiary: #eeeeee;
+    --text-primary: #333333;
+    --text-secondary: #555555;
+    --accent-primary: #a0886c; /* Soft greyish-brown */
+    --accent-secondary: #806a4d; /* Rich brownish-grey */
+    --accent-highlight: #bfa488; /* Lighter beige-brown for highlights */
+    --border-color: #cccccc;
+    --box-shadow: rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 50%, #eaeaea 100%);
+    color: var(--text-primary);
+}
 body{
     font-family: 'Inter', Arial, Helvetica, sans-serif;
     background: var(--gradient-background);
@@ -30,21 +45,53 @@ body{
     padding: 20px;
     line-height: 1.6;
     overflow-x: hidden;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 50px; /* Circular size */
+    height: 50px;
+    background: var(--accent-primary); /* Match theme */
+    color: var(--bg-primary);
+    border: 2px solid var(--accent-secondary); /* Border to complement the theme */
+    border-radius: 50%; /* Make it a circle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem; /* Icon size */
+    cursor: pointer;
+    box-shadow: 0 4px 6px var(--box-shadow); /* Add a shadow for depth */
+    transition: all 0.3s ease; /* Smooth hover transitions */
+    z-index: 1100;
 }
 
+.theme-toggle:hover {
+    background: var(--accent-highlight); /* Highlight on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    box-shadow: 0 8px 12px var(--box-shadow); /* Enhanced shadow */
+}
+
+.theme-toggle:active {
+    transform: scale(1); /* Reset on click */
+    box-shadow: 0 4px 6px var(--box-shadow); /* Subtle shadow */
+}
 .nav-btn {
-    background: var(--gradient-element);
-    color: var(--text-primary);
+    background: var(--accent-primary);
+    color: var(--bg-primary);
     text-decoration: none;
     padding: 10px 20px;
     margin: 0 10px;
     border-radius: 8px;
     transition: all 0.3s ease;
-    border: 1px solid var(--accent-primary);
+    border: 1px solid var(--accent-secondary);
 }
 
 .nav-btn:hover {
-    background: var(--gradient-hover);
+    background: var(--accent-highlight);
+    color: var(--bg-primary);
     transform: scale(1.05);
 }
 
@@ -55,18 +102,19 @@ body{
 .container{
     max-width: 1500px;
     margin: 0 auto;
-    background-color: rgba(26, 26, 48, 0.8);
+    background-color: var(--bg-secondary);
     backdrop-filter: blur(10px);
     padding: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    border: 2px solid var(--border-color);
     border-radius: 15px;
-    border: 2px solid var(--accent-primary);
+    border: 2px solid var(--border-color);
     
 }
 h1{
     text-align: center;
     font-size: 2.5em;
     margin-bottom: 20px;
+    color: var(--accent-primary);
     background: linear-gradient(90deg, var(--accent-primary), var(--accent-highlight));
     background-clip: text;
     -webkit-background-clip: text;
@@ -94,6 +142,7 @@ h1::before {
     height: 100%;
     width: 250px;
     background: var(--bg-secondary);
+    color: var(--text-primary);
     padding: 20px;
     z-index: 1000;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
@@ -175,7 +224,7 @@ h1::before {
     justify-content: center;
     width: 100%;
     margin-bottom: 15px;
-    background: rgba(38, 38, 64, 0.5);
+    background: var(--bg-tertiary);
     padding: 15px;
     border-radius: 10px;
     backdrop-filter: blur(5px);
@@ -233,8 +282,9 @@ h1::before {
 .element {
     width: 80px; /* Increase width */
     height: auto; /* Increase height */
-    background: var(--gradient-element);
-    border: 1px solid var(--accent-primary);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -244,7 +294,7 @@ h1::before {
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px var(--box-shadow);
     position: relative;
     overflow: hidden;
 }
@@ -264,10 +314,11 @@ h1::before {
     opacity: 1;
     transform: rotate(-45deg) translate(0, 50%);
 }
-.element-hover {
+.element:hover {
+    
     transform: scale(1.05);
     box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    background: var(--gradient-hover);
+    
 }
 .element-selected {
     border-color: var(--accent-secondary) !important;
@@ -297,11 +348,6 @@ h1::before {
     color: var(--accent-primary);
 }
 
-.element-symbol {
-    font-size: 2em;
-    color: var(--accent-secondary);
-    font-weight: bold;
-}
 
 .detail-grid {
     display: grid;
@@ -338,7 +384,6 @@ h1::before {
     margin-bottom: 10px;
 }
 .element .symbol {
-    font-size: 1.2em;
     font-weight: bold;
     font-size: 1.5em;
     white-space: nowrap;
@@ -367,9 +412,27 @@ h1::before {
     color: var(--accent-primary);
 }
 
+.mpt-view {
+    display: grid;
+    grid-template-columns: repeat(18, 1fr); /* 18 groups (columns) */
+    grid-auto-rows: 50px; /* Set uniform row height */
+    gap: 8px; /* Spacing between elements */
+    padding: 20px;
+    justify-items: center;
+}
+
+/* Lanthanides and Actinides */
+.lanthanides-row,
+.actinides-row {
+    grid-column: span 18; /* Full-width row */
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
 @media (max-width: 1200px) {
     .periodic-table {
-        grid-template-columns: repeat(8, 1fr);
+        grid-template-columns: repeat(6, 1fr);
     }
     
     .controls {

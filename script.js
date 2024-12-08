@@ -220,10 +220,10 @@ function toggleElementNames() {
 
             // Restore box size for symbols
             el.style.width = '80px';
-            el.style.height = '100px';
+            el.style.height = 'auto';
 
             // Restore font for symbols
-            symbol.style.fontSize = '1.2em';
+            symbol.style.fontSize = '1.5em';
         }
     });
 }
@@ -235,3 +235,69 @@ function changeViewMode(mode) {
     const table = document.getElementById('periodic-table');
     table.className = mode;
 }
+const themeToggleButton = document.getElementById('theme-toggle');
+const body = document.body;
+
+// Set initial icon based on the current theme
+document.addEventListener('DOMContentLoaded', () => {
+    themeToggleButton.textContent = body.classList.contains('light-theme') ? '☀️' : '🌙';
+});
+
+// Toggle theme and update the icon
+themeToggleButton.addEventListener('click', () => {
+    body.classList.toggle('light-theme');
+
+    // Update the button icon
+    themeToggleButton.textContent = body.classList.contains('light-theme') ? '☀️' : '🌙';
+});
+
+
+const periodicTable = document.getElementById('periodic-table');
+const mptToggleButton = document.getElementById('mpt-toggle');
+let isMPTView = false;
+
+// Function to create MPT layout
+function applyMPTView() {
+    periodicTable.classList.add('mpt-view'); // Apply MPT layout class
+
+    // Position elements based on the Modern Periodic Table
+    elementsData.forEach((element) => {
+        const elementDiv = document.querySelector(`[data-atomic-number="${element.atomicNumber}"]`);
+        
+        if (element.period >= 1 && element.group >= 1) {
+            elementDiv.style.gridColumnStart = element.group; // Position by group
+            elementDiv.style.gridRowStart = element.period; // Position by period
+        }
+
+        // Handle lanthanides and actinides
+        if (element.groupBlock === 'Lanthanide') {
+            elementDiv.parentElement.classList.add('lanthanides');
+        } else if (element.groupBlock === 'Actinide') {
+            elementDiv.parentElement.classList.add('actinides');
+        }
+    });
+}
+
+// Function to revert to the default layout
+function revertToDefaultView() {
+    periodicTable.classList.remove('mpt-view'); // Remove MPT layout class
+
+    // Reset inline styles
+    document.querySelectorAll('.element').forEach((el) => {
+        el.style.gridColumnStart = '';
+        el.style.gridRowStart = '';
+    });
+}
+
+// Toggle between views
+mptToggleButton.addEventListener('click', () => {
+    isMPTView = !isMPTView;
+
+    if (isMPTView) {
+        applyMPTView();
+        mptToggleButton.textContent = 'Revert View';
+    } else {
+        revertToDefaultView();
+        mptToggleButton.textContent = 'Toggle MPT View';
+    }
+});

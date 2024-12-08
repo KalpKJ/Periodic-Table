@@ -12,7 +12,9 @@
         
         <div class="controls">
             <input type="text" id="search" placeholder="Search element...">
-
+            <button id="theme-toggle" class="theme-toggle">
+                🌙
+            </button>
             <div class="filter-section">
                 <label>Filter by Category:</label>
                 <button class="filter-btn" data-category="all">All</button>
@@ -29,9 +31,16 @@
                 <button class="filter-btn" data-category="Post-transition metal">Post-transition Metals</button>
             </div>
         </div>
-        <div id = "periodic-table" class ="periodic-table">
-
+        <div id="periodic-table" class="periodic-table">
+            <!-- Elements for the main table will be dynamically inserted here -->
         </div>
+        <div class="lanthanides-row">
+            <!-- Lanthanide elements will be dynamically inserted here -->
+        </div>
+        <div class="actinides-row">
+            <!-- Actinide elements will be dynamically inserted here -->
+        </div>
+        
         <div id="element-details" class="element-details">
             <h2 class="details-name">Element Details</h2>
             <p class="details-info">Click on any element to see more informations</p>
@@ -61,6 +70,7 @@
                 <div id="view-mode-options">
                     <div class="sidebar-option" data-action="view-mode-full">Full Details</div>
                     <div class="sidebar-option" data-action="view-mode-compact">Compact View</div>
+                    <button id="mpt-toggle" class="nav-btn">Toggle MPT View</button>
                 </div>
             </div>
             <div class="sidebar-section">
