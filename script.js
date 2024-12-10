@@ -256,39 +256,58 @@ const periodicTable = document.getElementById('periodic-table');
 const mptToggleButton = document.getElementById('mpt-toggle');
 let isMPTView = false;
 
-// Function to create MPT layout
 function applyMPTView() {
-    periodicTable.classList.add('mpt-view'); // Apply MPT layout class
+    periodicTable.classList.add('mpt-view'); // Add MPT layout
 
-    // Position elements based on the Modern Periodic Table
     elementsData.forEach((element) => {
         const elementDiv = document.querySelector(`[data-atomic-number="${element.atomicNumber}"]`);
         
-        if (element.period >= 1 && element.group >= 1) {
-            elementDiv.style.gridColumnStart = element.group; // Position by group
-            elementDiv.style.gridRowStart = element.period; // Position by period
+        // General positioning using grid-area
+        let gridColumn, gridRow;
+        
+        if (element.group && element.period) {
+            gridColumn = element.group;
+            gridRow = element.period;
         }
 
-        // Handle lanthanides and actinides
-        if (element.groupBlock === 'Lanthanide') {
-            elementDiv.parentElement.classList.add('lanthanides');
-        } else if (element.groupBlock === 'Actinide') {
-            elementDiv.parentElement.classList.add('actinides');
+        // Special cases for Hydrogen and Helium
+        if (element.atomicNumber === 1) {
+            gridColumn = 1;
+            gridRow = 1;
+        } else if (element.atomicNumber === 2) {
+            gridColumn = 18;
+            gridRow = 1;
         }
+
+        // Lanthanides and Actinides
+        if (element.groupBlock === "Lanthanide") {
+            gridRow = 9; // Lanthanide row
+            gridColumn = element.atomicNumber - 56; // Columns based on atomic number
+        } else if (element.groupBlock === "Actinide") {
+            gridRow = 10; // Actinide row
+            gridColumn = element.atomicNumber - 88; // Columns based on atomic number
+        }
+
+        // Apply the calculated grid position
+        elementDiv.style.gridColumnStart = gridColumn;
+        elementDiv.style.gridRowStart = gridRow;
+
+        // Add category class for styling
+        elementDiv.classList.add(getCategoryClass(element.groupBlock));
     });
 }
+
 
 // Function to revert to the default layout
 function revertToDefaultView() {
     periodicTable.classList.remove('mpt-view'); // Remove MPT layout class
 
-    // Reset inline styles
+    // Reset inline styles for all elements
     document.querySelectorAll('.element').forEach((el) => {
         el.style.gridColumnStart = '';
         el.style.gridRowStart = '';
     });
 }
-
 // Toggle between views
 mptToggleButton.addEventListener('click', () => {
     isMPTView = !isMPTView;
@@ -300,4 +319,13 @@ mptToggleButton.addEventListener('click', () => {
         revertToDefaultView();
         mptToggleButton.textContent = 'Toggle MPT View';
     }
+});
+document.getElementById('login-btn').addEventListener('click', () => {
+    alert('Log In button clicked!');
+    // Add modal or navigation logic here
+});
+
+document.getElementById('signup-btn').addEventListener('click', () => {
+    alert('Sign Up button clicked!');
+    // Add modal or navigation logic here
 });

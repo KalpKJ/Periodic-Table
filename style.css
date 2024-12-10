@@ -217,6 +217,33 @@ h1::before {
     border-color: var(--accent-secondary);
     box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
 }
+
+.auth-buttons {
+    position: fixed; /* Change to fixed for better control */
+    top: 20px;
+    right: 70px; /* Adjust right margin to leave space for navbar button */
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.nav-btn {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--accent-secondary);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    background: var(--accent-highlight);
+    color: var(--bg-primary);
+    transform: scale(1.05);
+}
 .filter-section {
     display: flex;
     flex-wrap: wrap;
@@ -414,21 +441,19 @@ h1::before {
 
 .mpt-view {
     display: grid;
-    grid-template-columns: repeat(18, 1fr); /* 18 groups (columns) */
-    grid-auto-rows: 50px; /* Set uniform row height */
-    gap: 8px; /* Spacing between elements */
+    grid-template-columns: repeat(18, 1fr); /* 18 groups */
+    grid-template-rows: repeat(10, 1fr);   /* 10 periods */
+    gap: 1px;
     padding: 20px;
-    justify-items: center;
 }
-
-/* Lanthanides and Actinides */
 .lanthanides-row,
 .actinides-row {
-    grid-column: span 18; /* Full-width row */
+    grid-column: span 18;
     display: flex;
     justify-content: center;
-    gap: 6px;
+    gap: 5px;
 }
+
 
 @media (max-width: 1200px) {
     .periodic-table {
