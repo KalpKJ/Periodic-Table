@@ -257,44 +257,151 @@ const mptToggleButton = document.getElementById('mpt-toggle');
 let isMPTView = false;
 
 function applyMPTView() {
-    periodicTable.classList.add('mpt-view'); // Add MPT layout
+    const periodicTable = document.getElementById('periodic-table');
+    periodicTable.classList.add('mpt-view');
+
+    // Detailed MPT positioning mapping
+    const elementPositions = {
+        1:   { column: 1,  row: 1 },   // H
+        2:   { column: 18, row: 1 },   // He
+        3:   { column: 1,  row: 2 },   // Li
+        4:   { column: 2,  row: 2 },   // Be
+        5:   { column: 13, row: 2 },   // B
+        6:   { column: 14, row: 2 },   // C
+        7:   { column: 15, row: 2 },   // N
+        8:   { column: 16, row: 2 },   // O
+        9:   { column: 17, row: 2 },   // F
+        10:  { column: 18, row: 2 },   // Ne
+        11:  { column: 1,  row: 3 },   // Na
+        12:  { column: 2,  row: 3 },   // Mg
+        13:  { column: 13, row: 3 },   // Al
+        14:  { column: 14, row: 3 },   // Si
+        15:  { column: 15, row: 3 },   // P
+        16:  { column: 16, row: 3 },   // S
+        17:  { column: 17, row: 3 },   // Cl
+        18:  { column: 18, row: 3 },   // Ar
+        // Add more elements as needed
+    };
+
+    // Transition Metals (Periods 4-7, Groups 3-12)
+    const transitionMetals = [
+        21, 22, 23, 24, 25, 26, 27, 28, 29, 30,  // Period 4
+        39, 40, 41, 42, 43, 44, 45, 46, 47, 48,  // Period 5
+        57, 72, 73, 74, 75, 76, 77, 78, 79, 80,  // Period 6
+        89, 104, 105, 106, 107, 108, 109, 110, 111, 112  // Period 7
+    ];
+
+    // Lanthanides and Actinides
+    const lanthanides = Array.from({length: 15}, (_, i) => 57 + i);
+    const actinides = Array.from({length: 15}, (_, i) => 89 + i);
 
     elementsData.forEach((element) => {
         const elementDiv = document.querySelector(`[data-atomic-number="${element.atomicNumber}"]`);
-        
-        // General positioning using grid-area
-        let gridColumn, gridRow;
-        
-        if (element.group && element.period) {
-            gridColumn = element.group;
-            gridRow = element.period;
+        if (!elementDiv) return;
+
+        let column, row;
+
+        // Predefined positions for first 18 elements
+        if (elementPositions[element.atomicNumber]) {
+            column = elementPositions[element.atomicNumber].column;
+            row = elementPositions[element.atomicNumber].row;
+        } 
+        // Transition Metals
+        else if (transitionMetals.includes(element.atomicNumber)) {
+            const metalIndex = transitionMetals.indexOf(element.atomicNumber);
+            const period = Math.floor(metalIndex / 10) + 4;
+            const groupOffset = metalIndex % 10;
+            column = groupOffset + 3;
+            row = period;
+        }
+        // Main Group Metals (Groups 1-2 and 13-18)
+        else if (element.groupBlock === 'Alkali Metal') {
+            column = 1;
+            row = element.atomicNumber <= 3 ? 2 : 3;
+        }
+        else if (element.groupBlock === 'Alkaline Earth Metal') {
+            column = 2;
+            row = element.atomicNumber <= 4 ? 2 : 3;
+        }
+        else if (element.groupBlock === 'Post-transition Metal') {
+            column = 13 + (element.atomicNumber - 13);
+            row = element.atomicNumber <= 13 ? 3 : 4;
+        }
+        // Halogens
+        else if (element.groupBlock === 'Halogen') {
+            column = 17;
+            row = Math.floor((element.atomicNumber - 9) / 2) + 2;
+        }
+        // Noble Gases
+        else if (element.groupBlock === 'Noble Gas') {
+            column = 18;
+            row = Math.floor((element.atomicNumber - 2) / 2) + 1;
+        }
+        // Lanthanides
+        else if (lanthanides.includes(element.atomicNumber)) {
+            column = lanthanides.indexOf(element.atomicNumber) + 3;
+            row = 9;
+        }
+        // Actinides
+        else if (actinides.includes(element.atomicNumber)) {
+            column = actinides.indexOf(element.atomicNumber) + 3;
+            row = 10;
+        }
+        // Default fallback
+        else {
+            column = element.group || 1;
+            row = element.period || 1;
         }
 
-        // Special cases for Hydrogen and Helium
-        if (element.atomicNumber === 1) {
-            gridColumn = 1;
-            gridRow = 1;
-        } else if (element.atomicNumber === 2) {
-            gridColumn = 18;
-            gridRow = 1;
-        }
-
-        // Lanthanides and Actinides
-        if (element.groupBlock === "Lanthanide") {
-            gridRow = 9; // Lanthanide row
-            gridColumn = element.atomicNumber - 56; // Columns based on atomic number
-        } else if (element.groupBlock === "Actinide") {
-            gridRow = 10; // Actinide row
-            gridColumn = element.atomicNumber - 88; // Columns based on atomic number
-        }
-
-        // Apply the calculated grid position
-        elementDiv.style.gridColumnStart = gridColumn;
-        elementDiv.style.gridRowStart = gridRow;
-
-        // Add category class for styling
-        elementDiv.classList.add(getCategoryClass(element.groupBlock));
+        // Apply positioning
+        elementDiv.style.gridColumnStart = column;
+        elementDiv.style.gridRowStart = row;
+        elementDiv.style.display = 'flex';
     });
+
+    // Set up Lanthanides and Actinides rows
+    const lanthanideRow = document.querySelector('.lanthanides-row');
+    const actinideRow = document.querySelector('.actinides-row');
+    
+    if (lanthanideRow) {
+        lanthanideRow.style.gridRow = '9';
+        lanthanideRow.style.gridColumnStart = '3';
+        lanthanideRow.style.gridColumnEnd = '18';
+    }
+    
+    if (actinideRow) {
+        actinideRow.style.gridRow = '10';
+        actinideRow.style.gridColumnStart = '3';
+        actinideRow.style.gridColumnEnd = '18';
+    }
+}
+
+function revertToDefaultView() {
+    const periodicTable = document.getElementById('periodic-table');
+    periodicTable.classList.remove('mpt-view');
+
+    // Reset all element positions
+    document.querySelectorAll('.element').forEach((el) => {
+        el.style.gridColumnStart = '';
+        el.style.gridRowStart = '';
+        el.style.display = '';
+    });
+
+    // Reset Lanthanides and Actinides rows
+    const lanthanideRow = document.querySelector('.lanthanides-row');
+    const actinideRow = document.querySelector('.actinides-row');
+    
+    if (lanthanideRow) {
+        lanthanideRow.style.gridRow = '';
+        lanthanideRow.style.gridColumnStart = '';
+        lanthanideRow.style.gridColumnEnd = '';
+    }
+    
+    if (actinideRow) {
+        actinideRow.style.gridRow = '';
+        actinideRow.style.gridColumnStart = '';
+        actinideRow.style.gridColumnEnd = '';
+    }
 }
 
 
